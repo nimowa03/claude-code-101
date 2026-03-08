@@ -35,7 +35,7 @@
       --input-focus: rgba(34,197,94,0.4);
     }
 
-    html { scroll-behavior: smooth; font-size: 17px; }
+    html { scroll-behavior: smooth; font-size: 18px; }
 
     body {
       font-family: var(--font-sans);
@@ -1136,75 +1136,6 @@
         </div>
       </article>
 
-      <!-- Part E: MD 파일이 뭔가요? -->
-      <article class="explain-card fade-in">
-        <div class="explain-badge">마크다운 파일이란?</div>
-        <h2>왜 마크다운(MD) 파일로 내보내나요?</h2>
-        <p class="explain-body">
-          MD(Markdown)는 텍스트 기반 문서 형식입니다.
-          제목, 목록, 강조 같은 구조를 간단한 기호(#, -, **)로 표현하기 때문에
-          사람도 읽기 쉽고, AI도 바로 이해할 수 있습니다.<br><br>
-          사업 계획서를 10장짜리 PDF로 만들 필요 없습니다.
-          BMC를 MD로 내보내면, AI 도구에 그대로 붙여넣기만 하면 됩니다.
-        </p>
-        <div class="why-cards">
-          <div class="why-card">
-            <h3>사람이 읽기 쉽다</h3>
-            <p>메모장에서도 열리고, 노션에 붙여넣으면 바로 서식이 적용됩니다.</p>
-          </div>
-          <div class="why-card">
-            <h3>AI가 바로 이해한다</h3>
-            <p>구조화된 텍스트라서 Claude, ChatGPT, Cursor 모두 즉시 파싱합니다.</p>
-          </div>
-          <div class="why-card">
-            <h3>어디서든 쓸 수 있다</h3>
-            <p>GitHub, 노션, 슬랙, 이메일 — 어디에 넣어도 깨지지 않습니다.</p>
-          </div>
-        </div>
-      </article>
-
-      <!-- Part F: 활용 튜토리얼 -->
-      <article class="explain-card fade-in">
-        <div class="explain-badge">활용 튜토리얼</div>
-        <h2>BMC 하나로 실제 서비스를 만드는 법</h2>
-        <p class="explain-body">
-          캔버스를 채우고 MD로 내보내면, 바이브코딩의 첫 걸음이 완성됩니다.
-          이 파일 하나로 AI가 사업 구조를 이해하고, 기획서부터 코드까지 만들어줍니다.
-        </p>
-        <div class="step-flow">
-          <div class="step-item">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <h3>BMC 캔버스 채우기</h3>
-              <p>아래 캔버스에서 9개 블록을 채웁니다. 완벽하지 않아도 됩니다 — 핵심만 적으면 AI가 나머지를 잡아줍니다.</p>
-            </div>
-          </div>
-          <div class="step-item">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <h3>MD 파일로 내보내기</h3>
-              <p>아래 초록색 "MD 파일 다운로드" 버튼을 누르면, AI가 읽을 수 있는 구조화된 문서가 자동으로 만들어집니다.</p>
-            </div>
-          </div>
-          <div class="step-item">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <h3>AI에게 기획서 만들어달라고 하기</h3>
-              <p>다운받은 MD 파일을 Claude, ChatGPT, AntiGravity 같은 AI에 전달하고 기획서를 요청하세요.</p>
-              <div class="step-prompt">"이 BMC를 기반으로 PRD(제품 요구사항 문서)를 만들어줘"</div>
-            </div>
-          </div>
-          <div class="step-item">
-            <div class="step-num">4</div>
-            <div class="step-content">
-              <h3>바이브코딩으로 실제 서비스 만들기</h3>
-              <p>만들어진 기획서(PRD)를 Claude Code, Cursor, Codex 같은 코딩 AI에 넣으면 실제 동작하는 웹앱이 만들어집니다.</p>
-              <div class="step-prompt">"이 PRD를 기반으로 Next.js 웹앱을 만들어줘"</div>
-            </div>
-          </div>
-        </div>
-      </article>
-
     </div>
   </section>
 
@@ -1384,6 +1315,82 @@
       </div>
     </div>
   </div>
+
+  <!-- MD 설명 + 활용 튜토리얼 (캔버스/내보내기 이후 배치) -->
+  <section class="bmc-explain-section">
+    <div class="container">
+
+      <!-- Part E: MD 파일이 뭔가요? -->
+      <article class="explain-card fade-in">
+        <div class="explain-badge">마크다운 파일이란?</div>
+        <h2>왜 마크다운(MD) 파일로 내보내나요?</h2>
+        <p class="explain-body">
+          MD(Markdown)는 텍스트 기반 문서 형식입니다.
+          제목, 목록, 강조 같은 구조를 간단한 기호(#, -, **)로 표현하기 때문에
+          사람도 읽기 쉽고, AI도 바로 이해할 수 있습니다.<br><br>
+          사업 계획서를 10장짜리 PDF로 만들 필요 없습니다.
+          BMC를 MD로 내보내면, AI 도구에 그대로 붙여넣기만 하면 됩니다.
+        </p>
+        <div class="why-cards">
+          <div class="why-card">
+            <h3>사람이 읽기 쉽다</h3>
+            <p>메모장에서도 열리고, 노션에 붙여넣으면 바로 서식이 적용됩니다.</p>
+          </div>
+          <div class="why-card">
+            <h3>AI가 바로 이해한다</h3>
+            <p>구조화된 텍스트라서 Claude, ChatGPT, Cursor 모두 즉시 파싱합니다.</p>
+          </div>
+          <div class="why-card">
+            <h3>어디서든 쓸 수 있다</h3>
+            <p>GitHub, 노션, 슬랙, 이메일 — 어디에 넣어도 깨지지 않습니다.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Part F: 활용 튜토리얼 -->
+      <article class="explain-card fade-in">
+        <div class="explain-badge">활용 튜토리얼</div>
+        <h2>BMC 하나로 실제 서비스를 만드는 법</h2>
+        <p class="explain-body">
+          캔버스를 채우고 MD로 내보내면, 바이브코딩의 첫 걸음이 완성됩니다.
+          이 파일 하나로 AI가 사업 구조를 이해하고, 기획서부터 코드까지 만들어줍니다.
+        </p>
+        <div class="step-flow">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h3>BMC 캔버스 채우기</h3>
+              <p>위 캔버스에서 9개 블록을 채웁니다. 완벽하지 않아도 됩니다 — 핵심만 적으면 AI가 나머지를 잡아줍니다.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h3>MD 파일로 내보내기</h3>
+              <p>위 초록색 "MD 파일 다운로드" 버튼을 누르면, AI가 읽을 수 있는 구조화된 문서가 자동으로 만들어집니다.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h3>AI에게 기획서 만들어달라고 하기</h3>
+              <p>다운받은 MD 파일을 Claude, ChatGPT, AntiGravity 같은 AI에 전달하고 기획서를 요청하세요.</p>
+              <div class="step-prompt">"이 BMC를 기반으로 PRD(제품 요구사항 문서)를 만들어줘"</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h3>바이브코딩으로 실제 서비스 만들기</h3>
+              <p>만들어진 기획서(PRD)를 Claude Code, Cursor, Codex 같은 코딩 AI에 넣으면 실제 동작하는 웹앱이 만들어집니다.</p>
+              <div class="step-prompt">"이 PRD를 기반으로 Next.js 웹앱을 만들어줘"</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
 
   <!-- CTA -->
   <section class="cta-section">
