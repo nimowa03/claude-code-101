@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>내 사업의 전체 그림, 한 눈에 정리하세요 — MakeGrowth</title>
+  <meta name="description" content="비즈니스 모델 캔버스로 9가지 핵심 요소를 한 장에 완성합니다. 빈칸을 채우면 사업의 구조가 보입니다." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+  <!-- html2canvas for image export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #09090b;
+      --card-bg: rgba(24,24,27,0.7);
+      --card-border: rgba(63,63,70,0.3);
+      --accent: #22c55e;
+      --orange: #f97316;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      --gradient-text: linear-gradient(135deg, #22c55e, #3b82f6, #a855f7);
+      --gradient-bar: linear-gradient(90deg, #22c55e, #3b82f6);
+      --font-sans: 'Pretendard Variable', Pretendard, Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --input-bg: rgba(9,9,11,0.6);
+      --input-border: rgba(63,63,70,0.5);
+      --input-focus: rgba(34,197,94,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--gradient-bar);
+      z-index: 10000;
+      transition: width 0.1s linear;
+    }
+
+    /* Completion counter */
+    .completion-counter {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 10000;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      background: rgba(9,9,11,0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .completion-counter.visible { opacity: 1; }
+    .completion-counter.complete { color: var(--accent); border-color: var(--accent); }
+
+    /* Layout */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .container-wide {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+    }
+
+    .hero-logo {
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 12px;
+      white-space: pre-line;
+    }
+
+    .hero-desc {
+      font-size: 0.9375rem;
+      color: var(--text-dim);
+      max-width: 480px;
+      white-space: pre-line;
+      margin-bottom: 48px;
+    }
+
+    .scroll-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.8125rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .scroll-cta svg { width: 20px; height: 20px; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ===== BMC EXPLANATION SECTION ===== */
+    .bmc-explain-section {
+      padding: 40px 0 80px;
+    }
+
+    .explain-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .explain-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--orange);
+      background: rgba(249,115,22,0.08);
+      border: 1px solid rgba(249,115,22,0.15);
+      border-radius: 6px;
+      padding: 4px 12px;
+      margin-bottom: 16px;
+    }
+
+    .explain-card h2 {
+      font-size: clamp(1.25rem, 3vw, 1.625rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+
+    .explain-body {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* Why cards (3-column) */
+    .why-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .why-card {
+      background: rgba(9,9,11,0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .why-card h3 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .why-card p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ===== BMC DIAGRAM (static mini grid) ===== */
+    .bmc-diagram-wrap {
+      margin-top: 24px;
+    }
+
+    .bmc-diagram {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 2fr 1.5fr 2fr;
+      grid-template-rows: 1fr 1fr 0.85fr;
+      gap: 4px;
+      font-size: 0.75rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .bmc-diagram .d-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(63,63,70,0.4);
+      border-radius: 6px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 2px;
+    }
+
+    .bmc-diagram .d-label {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.6875rem;
+      letter-spacing: 0.02em;
+    }
+
+    .bmc-diagram .d-sub {
+      color: var(--text-dim);
+      font-size: 0.625rem;
+    }
+
+    .bmc-diagram .d-zone {
+      font-size: 0.5625rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      opacity: 0.6;
+      margin-top: 2px;
+    }
+
+    /* Grid placement for the mini diagram */
+    .d-partners { grid-column: 1; grid-row: 1 / 3; }
+    .d-activities { grid-column: 2; grid-row: 1; }
+    .d-value { grid-column: 3; grid-row: 1 / 3; border-color: var(--accent) !important; background: rgba(34,197,94,0.04) !important; }
+    .d-relations { grid-column: 4; grid-row: 1; }
+    .d-segments { grid-column: 5; grid-row: 1 / 3; }
+    .d-resources { grid-column: 2; grid-row: 2; }
+    .d-channels { grid-column: 4; grid-row: 2; }
+    .d-cost { grid-column: 1 / 3; grid-row: 3; }
+    .d-revenue { grid-column: 3 / 6; grid-row: 3; }
+
+    .diagram-zones {
+      display: flex;
+      justify-content: space-between;
+      max-width: 680px;
+      margin: 8px auto 0;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      opacity: 0.5;
+      padding: 0 4px;
+    }
+
+    .diagram-footer-text {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== EXAMPLE BMC ===== */
+    .example-bmc {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 2fr 1.5fr 2fr;
+      grid-template-rows: 1fr 1fr 0.85fr;
+      gap: 4px;
+      font-size: 0.75rem;
+      max-width: 680px;
+      margin: 24px auto 0;
+    }
+
+    .example-bmc .d-cell {
+      background: rgba(34,197,94,0.04);
+      border: 1px solid rgba(34,197,94,0.15);
+      border-radius: 6px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      gap: 2px;
+    }
+
+    .example-bmc .d-label {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.6875rem;
+      letter-spacing: 0.02em;
+    }
+
+    .example-text {
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    /* ===== INTERACTIVE BMC CANVAS ===== */
+    .bmc-section {
+      padding: 0 0 60px;
+    }
+
+    .bmc-wrapper {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      transition: border-color 0.5s, box-shadow 0.5s;
+    }
+
+    .bmc-wrapper.glow {
+      border-color: rgba(34,197,94,0.4);
+      box-shadow: 0 0 40px rgba(34,197,94,0.08), 0 0 80px rgba(34,197,94,0.04);
+    }
+
+    .bmc-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .bmc-header h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .bmc-header-sub {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+    }
+
+    /* BMC Grid */
+    .bmc-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 2fr 1.5fr 2fr;
+      grid-template-rows: 1fr 1fr 0.85fr;
+      gap: 8px;
+      min-height: 520px;
+    }
+
+    .bmc-cell {
+      background: rgba(9,9,11,0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 12px 10px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .bmc-cell.filled {
+      border-color: rgba(34,197,94,0.3);
+    }
+
+    @keyframes fill-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.2); }
+      70% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+
+    .bmc-cell.just-filled {
+      animation: fill-pulse 0.6s ease-out;
+    }
+
+    .bmc-cell-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+
+    .bmc-cell-sublabel {
+      font-size: 0.5625rem;
+      color: var(--text-dim);
+      opacity: 0.6;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .bmc-cell textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      resize: none;
+      overflow: hidden;
+    }
+
+    .bmc-cell textarea::placeholder {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+    }
+
+    .bmc-cell textarea:focus {
+      outline: none;
+    }
+
+    .bmc-cell:focus-within {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.1);
+    }
+
+    /* Tip icon */
+    .bmc-tip-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-dim);
+      font-size: 0.625rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+      z-index: 2;
+    }
+
+    .bmc-tip-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+
+    /* Tooltip popover */
+    .bmc-tooltip {
+      position: absolute;
+      top: 32px;
+      right: 4px;
+      width: 220px;
+      background: rgba(24,24,27,0.98);
+      border: 1px solid rgba(63,63,70,0.6);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .bmc-tooltip.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    /* Grid placement */
+    .cell-partners { grid-column: 1; grid-row: 1 / 3; }
+    .cell-activities { grid-column: 2; grid-row: 1; }
+    .cell-value { grid-column: 3; grid-row: 1 / 3; }
+    .cell-relations { grid-column: 4; grid-row: 1; }
+    .cell-segments { grid-column: 5; grid-row: 1 / 3; }
+    .cell-resources { grid-column: 2; grid-row: 2; }
+    .cell-channels { grid-column: 4; grid-row: 2; }
+    .cell-cost { grid-column: 1 / 3; grid-row: 3; }
+    .cell-revenue { grid-column: 3 / 6; grid-row: 3; }
+
+    /* ===== EXPORT SECTION ===== */
+    .export-section {
+      padding: 0 0 60px;
+    }
+
+    .export-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      border: none;
+    }
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .export-btn:active { transform: translateY(0); }
+    .export-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .export-btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .export-btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+    .export-btn-danger {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(24,24,27,0.95);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10001;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ===== HIDDEN EXPORT AREA (flexbox for html2canvas) ===== */
+    .bmc-export-area {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 1100px;
+      background: #0f0f13;
+      border: 1px solid rgba(63,63,70,0.4);
+      border-radius: 16px;
+      padding: 32px 28px;
+      z-index: -1;
+    }
+
+    .export-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(63,63,70,0.3);
+    }
+
+    .export-brand {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .export-date {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .export-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    /* Export grid uses flexbox for html2canvas compatibility */
+    .export-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .export-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .export-cell {
+      background: rgba(24,24,27,0.5);
+      border: 1px solid rgba(63,63,70,0.25);
+      border-radius: 10px;
+      padding: 14px 12px;
+      min-height: 80px;
+    }
+
+    .export-cell-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .export-cell-value {
+      font-size: 0.8125rem;
+      color: var(--text);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: keep-all;
+    }
+
+    .export-cell-empty {
+      color: var(--text-dim);
+      font-style: italic;
+      font-size: 0.75rem;
+    }
+
+    /* Export row layout: top row (5 cols) */
+    .export-row-top .export-cell { min-height: 140px; }
+    .export-row-top .ec-partners { flex: 2; }
+    .export-row-top .ec-act-res { flex: 1.5; display: flex; flex-direction: column; gap: 6px; background: transparent; border: none; padding: 0; min-height: auto; }
+    .export-row-top .ec-act-res .export-cell { flex: 1; }
+    .export-row-top .ec-value { flex: 2; }
+    .export-row-top .ec-rel-ch { flex: 1.5; display: flex; flex-direction: column; gap: 6px; background: transparent; border: none; padding: 0; min-height: auto; }
+    .export-row-top .ec-rel-ch .export-cell { flex: 1; }
+    .export-row-top .ec-segments { flex: 2; }
+
+    /* Export row layout: bottom row (2 cols) */
+    .export-row-bottom .ec-cost { flex: 1; }
+    .export-row-bottom .ec-revenue { flex: 1.5; }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      padding: 0 0 80px;
+    }
+    .cta-card {
+      background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(59,130,246,0.06));
+      border: 1px solid rgba(34,197,94,0.15);
+      border-radius: 16px;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .cta-card h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .cta-card .cta-desc {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+    .cta-channels {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .cta-btn:active { transform: translateY(0); }
+    .cta-btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .cta-btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .channel-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .channel-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .channel-link:hover {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+    }
+    .channel-link .ch-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .channel-link .ch-icon svg { width: 20px; height: 20px; }
+    .ch-icon-yt { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .ch-icon-threads { background: rgba(255,255,255,0.08); color: #fff; }
+    .channel-link .ch-text { display: flex; flex-direction: column; }
+    .channel-link .ch-label { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+    .channel-link .ch-desc { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-brand { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .footer-tagline { font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 16px; }
+    .footer-copy { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .fade-in { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ===== RESPONSIVE ===== */
+
+    /* Tablet: 768-1199px — 2-column reflow */
+    @media (max-width: 1199px) {
+      .bmc-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        min-height: auto;
+      }
+      .cell-value { grid-column: 1 / -1; grid-row: auto; }
+      .cell-partners { grid-column: auto; grid-row: auto; }
+      .cell-activities { grid-column: auto; grid-row: auto; }
+      .cell-relations { grid-column: auto; grid-row: auto; }
+      .cell-segments { grid-column: auto; grid-row: auto; }
+      .cell-resources { grid-column: auto; grid-row: auto; }
+      .cell-channels { grid-column: auto; grid-row: auto; }
+      .cell-cost { grid-column: auto; grid-row: auto; }
+      .cell-revenue { grid-column: auto; grid-row: auto; }
+
+      .bmc-cell { min-height: 120px; }
+    }
+
+    @media (max-width: 767px) {
+      .bmc-grid {
+        grid-template-columns: 1fr;
+      }
+      /* Logical mobile order: Customer -> Value -> Channel -> Relations -> Revenue -> Activities -> Resources -> Partners -> Cost */
+      .cell-segments { order: 1; }
+      .cell-value { order: 2; }
+      .cell-channels { order: 3; }
+      .cell-relations { order: 4; }
+      .cell-revenue { order: 5; }
+      .cell-activities { order: 6; }
+      .cell-resources { order: 7; }
+      .cell-partners { order: 8; }
+      .cell-cost { order: 9; }
+
+      .bmc-cell { min-height: 100px; }
+      .bmc-wrapper { padding: 24px 16px; }
+      .bmc-diagram { font-size: 0.625rem; }
+      .example-bmc { grid-template-columns: 1fr; }
+      .why-cards { grid-template-columns: 1fr; }
+      .explain-card { padding: 28px 20px; }
+      .hero { padding: 60px 20px 40px; }
+      .cta-card { padding: 32px 20px; }
+      .channel-cards { grid-template-columns: 1fr; }
+      .export-actions { flex-direction: column; align-items: center; }
+    }
+
+    @media (max-width: 480px) {
+      .bmc-wrapper { padding: 16px 12px; }
+      .bmc-cell { padding: 12px 10px 8px; min-height: 90px; }
+      .bmc-cell-label { font-size: 0.625rem; }
+      .bmc-cell textarea { font-size: 0.75rem; }
+      .hero h1 { font-size: 1.75rem; }
+
+      /* Hide diagram on very small screens */
+      .bmc-diagram-wrap { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Completion Counter -->
+  <div class="completion-counter" id="completionCounter">0/9</div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="fade-in">
+      <div class="hero-logo">MakeGrowth</div>
+    </div>
+    <div class="fade-in">
+      <h1 class="gradient-text">내 사업의 전체 그림,<br>한 눈에 정리하세요</h1>
+    </div>
+    <div class="fade-in">
+      <p class="hero-subtitle">비즈니스 모델 캔버스로 9가지 핵심 요소를
+한 장에 완성합니다.</p>
+    </div>
+    <div class="fade-in">
+      <p class="hero-desc">빈칸을 채우면 사업의 구조가 보입니다.
+완성된 캔버스는 이미지로 저장하세요.</p>
+    </div>
+    <div class="fade-in">
+      <div class="scroll-cta">
+        <span>아래에서 BMC를 알아보세요</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- BMC Explanation Section -->
+  <section class="bmc-explain-section">
+    <div class="container">
+
+      <!-- Part A: BMC가 뭔가요? -->
+      <article class="explain-card fade-in">
+        <div class="explain-badge">BMC란?</div>
+        <h2>비즈니스 모델 캔버스란</h2>
+        <p class="explain-body">알렉산더 오스터왈더가 만든 전략 도구입니다. 사업의 핵심 9가지를 한 장에 정리할 수 있어요. 스타트업부터 1인 창업까지, 전 세계에서 가장 많이 쓰이는 사업 정리 도구입니다.</p>
+      </article>
+
+      <!-- Part B: 왜 써야 하나요? -->
+      <article class="explain-card fade-in">
+        <div class="explain-badge">왜 써야 하나요?</div>
+        <h2>사업 정리, 왜 캔버스가 좋을까요?</h2>
+        <div class="why-cards">
+          <div class="why-card">
+            <h3>복잡한 사업을 한 장으로</h3>
+            <p>머릿속 아이디어를 9개 블록에 정리하면, 빠진 부분이 한눈에 보입니다.</p>
+          </div>
+          <div class="why-card">
+            <h3>블록끼리 연결됩니다</h3>
+            <p>고객이 바뀌면 채널도, 가치 제안도 바뀝니다. 그 관계를 시각적으로 보여줍니다.</p>
+          </div>
+          <div class="why-card">
+            <h3>누구에게든 설명 가능</h3>
+            <p>완성된 캔버스 한 장이면, 투자자든 파트너든 사업 구조를 바로 설명할 수 있습니다.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Part C: 9개 블록 관계 다이어그램 -->
+      <article class="explain-card fade-in">
+        <div class="explain-badge">9개 블록</div>
+        <h2>블록은 이렇게 연결됩니다</h2>
+        <div class="bmc-diagram-wrap">
+          <div class="bmc-diagram">
+            <div class="d-cell d-partners">
+              <span class="d-label">핵심 파트너</span>
+              <span class="d-sub">Key Partners</span>
+            </div>
+            <div class="d-cell d-activities">
+              <span class="d-label">핵심 활동</span>
+              <span class="d-sub">Key Activities</span>
+            </div>
+            <div class="d-cell d-value">
+              <span class="d-label">가치 제안</span>
+              <span class="d-sub">Value Propositions</span>
+            </div>
+            <div class="d-cell d-relations">
+              <span class="d-label">고객 관계</span>
+              <span class="d-sub">Customer Relationships</span>
+            </div>
+            <div class="d-cell d-segments">
+              <span class="d-label">고객 세그먼트</span>
+              <span class="d-sub">Customer Segments</span>
+            </div>
+            <div class="d-cell d-resources">
+              <span class="d-label">핵심 자원</span>
+              <span class="d-sub">Key Resources</span>
+            </div>
+            <div class="d-cell d-channels">
+              <span class="d-label">채널</span>
+              <span class="d-sub">Channels</span>
+            </div>
+            <div class="d-cell d-cost">
+              <span class="d-label">비용 구조</span>
+              <span class="d-sub">Cost Structure</span>
+            </div>
+            <div class="d-cell d-revenue">
+              <span class="d-label">수익원</span>
+              <span class="d-sub">Revenue Streams</span>
+            </div>
+          </div>
+          <div class="diagram-zones">
+            <span>HOW</span>
+            <span>WHAT</span>
+            <span>WHO</span>
+          </div>
+          <div style="text-align:center; margin-top:4px;">
+            <span style="font-size:0.625rem; font-weight:700; letter-spacing:0.1em; color:var(--text-dim); opacity:0.5;">MONEY</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Part D: 예시로 보는 BMC -->
+      <article class="explain-card fade-in">
+        <div class="explain-badge">예시로 보기</div>
+        <h2>이런 식으로 채우면 됩니다</h2>
+        <p class="explain-body">
+          AI 상세페이지 빌더 서비스의 BMC를 예시로 살펴보세요.<br>
+          아래 인터랙티브 캔버스에서 내 서비스에 맞게 직접 채워보세요.
+        </p>
+
+        <div class="example-bmc">
+          <div class="d-cell d-partners">
+            <span class="d-label">핵심 파트너</span>
+            <span class="example-text">Gemini, OpenAI, Resend, Supabase</span>
+          </div>
+          <div class="d-cell d-activities">
+            <span class="d-label">핵심 활동</span>
+            <span class="example-text">프롬프트 엔지니어링, 유저 피드백 수집 및 반영</span>
+          </div>
+          <div class="d-cell d-value">
+            <span class="d-label">가치 제안</span>
+            <span class="example-text">AI 페이스스왑 현지화, AI 마케팅 리포트 자동생성, 건당 $0.99</span>
+          </div>
+          <div class="d-cell d-relations">
+            <span class="d-label">고객 관계</span>
+            <span class="example-text">커뮤니티 피드백, 셀프서비스 UI, 성공 사례 공유</span>
+          </div>
+          <div class="d-cell d-segments">
+            <span class="d-label">고객 세그먼트</span>
+            <span class="example-text">중국 소싱→글로벌 판매 1인 셀러, 초보 셀러, 가성비 중심</span>
+          </div>
+          <div class="d-cell d-resources">
+            <span class="d-label">핵심 자원</span>
+            <span class="example-text">최적화된 프롬프트 데이터셋, 자동화 파이프라인, 실행력</span>
+          </div>
+          <div class="d-cell d-channels">
+            <span class="d-label">채널</span>
+            <span class="example-text">국내: 네이버 카페, 배대지 / 해외: Reddit, TikTok, Product Hunt</span>
+          </div>
+          <div class="d-cell d-cost">
+            <span class="d-label">비용 구조</span>
+            <span class="example-text">Gemini/OpenAI API 호출 비용 (건당), 인프라 유지비</span>
+          </div>
+          <div class="d-cell d-revenue">
+            <span class="d-label">수익원</span>
+            <span class="example-text">건당 $2.99, 월구독 $15/$39</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Interactive BMC Canvas -->
+  <section class="bmc-section" id="bmcCanvas">
+    <div class="container-wide">
+      <div class="bmc-wrapper fade-in" id="bmcWrapper">
+        <div class="bmc-header">
+          <h2 class="gradient-text">나의 비즈니스 모델 캔버스</h2>
+          <p class="bmc-header-sub">각 블록을 클릭해서 내용을 채워보세요</p>
+        </div>
+
+        <div class="bmc-grid" id="bmcGrid">
+          <!-- 1. 핵심 파트너 -->
+          <div class="bmc-cell cell-partners" data-field="partners">
+            <span class="bmc-cell-label">핵심 파트너</span>
+            <span class="bmc-cell-sublabel">Key Partners</span>
+            <textarea placeholder="누구와 협력하나요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="partners" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-partners">외부 파트너, 공급업체, 기술 제휴 등 사업을 함께 만들어가는 협력자를 적어보세요.</div>
+          </div>
+
+          <!-- 2. 핵심 활동 -->
+          <div class="bmc-cell cell-activities" data-field="activities">
+            <span class="bmc-cell-label">핵심 활동</span>
+            <span class="bmc-cell-sublabel">Key Activities</span>
+            <textarea placeholder="사업의 핵심 활동은?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="activities" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-activities">가치를 만들고 전달하기 위해 꼭 해야 하는 것들을 적어보세요.</div>
+          </div>
+
+          <!-- 3. 가치 제안 -->
+          <div class="bmc-cell cell-value" data-field="value">
+            <span class="bmc-cell-label">가치 제안</span>
+            <span class="bmc-cell-sublabel">Value Propositions</span>
+            <textarea placeholder="고객에게 어떤 가치를 제공하나요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="value" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-value">가장 중요한 블록입니다. 고객이 왜 우리를 선택하는지 적어보세요.</div>
+          </div>
+
+          <!-- 4. 고객 관계 -->
+          <div class="bmc-cell cell-relations" data-field="relations">
+            <span class="bmc-cell-label">고객 관계</span>
+            <span class="bmc-cell-sublabel">Customer Relationships</span>
+            <textarea placeholder="고객과 어떤 관계를 맺나요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="relations" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-relations">고객을 어떻게 확보하고, 유지하고, 성장시키는지 적어보세요.</div>
+          </div>
+
+          <!-- 5. 고객 세그먼트 -->
+          <div class="bmc-cell cell-segments" data-field="segments">
+            <span class="bmc-cell-label">고객 세그먼트</span>
+            <span class="bmc-cell-sublabel">Customer Segments</span>
+            <textarea placeholder="누구를 위한 서비스인가요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="segments" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-segments">"모든 사람"이 아닌, 구체적인 고객 그룹을 적어보세요.</div>
+          </div>
+
+          <!-- 6. 핵심 자원 -->
+          <div class="bmc-cell cell-resources" data-field="resources">
+            <span class="bmc-cell-label">핵심 자원</span>
+            <span class="bmc-cell-sublabel">Key Resources</span>
+            <textarea placeholder="꼭 필요한 자원은?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="resources" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-resources">사람, 기술, 돈, 지식재산 등 사업에 꼭 필요한 자원을 적어보세요.</div>
+          </div>
+
+          <!-- 7. 채널 -->
+          <div class="bmc-cell cell-channels" data-field="channels">
+            <span class="bmc-cell-label">채널</span>
+            <span class="bmc-cell-sublabel">Channels</span>
+            <textarea placeholder="고객에게 어떻게 전달하나요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="channels" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-channels">인지부터 구매, 전달까지 고객에게 닿는 전체 경로를 적어보세요.</div>
+          </div>
+
+          <!-- 8. 비용 구조 -->
+          <div class="bmc-cell cell-cost" data-field="cost">
+            <span class="bmc-cell-label">비용 구조</span>
+            <span class="bmc-cell-sublabel">Cost Structure</span>
+            <textarea placeholder="주요 비용은 무엇인가요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="cost" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-cost">고정비와 변동비를 나눠서 적어보세요. 어디에 돈이 드는지 파악하는 게 중요합니다.</div>
+          </div>
+
+          <!-- 9. 수익원 -->
+          <div class="bmc-cell cell-revenue" data-field="revenue">
+            <span class="bmc-cell-label">수익원</span>
+            <span class="bmc-cell-sublabel">Revenue Streams</span>
+            <textarea placeholder="어떻게 돈을 버나요?" rows="3"></textarea>
+            <button class="bmc-tip-btn" data-tip="revenue" type="button">?</button>
+            <div class="bmc-tooltip" id="tip-revenue">가격과 과금 방식을 적어보세요. 구독인지, 건당인지, 광고인지 등.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Export Section -->
+  <section class="export-section">
+    <div class="container">
+      <div class="export-actions fade-in">
+        <button class="export-btn export-btn-primary" id="btnSaveImage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          이미지로 저장
+        </button>
+        <button class="export-btn export-btn-secondary" id="btnCopyText">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          텍스트 복사
+        </button>
+        <button class="export-btn export-btn-danger" id="btnReset">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          초기화
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hidden export area (flexbox-based for html2canvas) -->
+  <div class="bmc-export-area" id="bmcExportArea">
+    <div class="export-header">
+      <div class="export-brand">MakeGrowth</div>
+      <div class="export-date" id="exportDate"></div>
+    </div>
+    <div class="export-title">나의 비즈니스 모델 캔버스</div>
+    <div class="export-grid">
+      <div class="export-row export-row-top">
+        <div class="export-cell ec-partners" id="exp-partners">
+          <div class="export-cell-label">핵심 파트너</div>
+          <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+        </div>
+        <div class="ec-act-res">
+          <div class="export-cell" id="exp-activities">
+            <div class="export-cell-label">핵심 활동</div>
+            <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+          </div>
+          <div class="export-cell" id="exp-resources">
+            <div class="export-cell-label">핵심 자원</div>
+            <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+          </div>
+        </div>
+        <div class="export-cell ec-value" id="exp-value">
+          <div class="export-cell-label">가치 제안</div>
+          <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+        </div>
+        <div class="ec-rel-ch">
+          <div class="export-cell" id="exp-relations">
+            <div class="export-cell-label">고객 관계</div>
+            <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+          </div>
+          <div class="export-cell" id="exp-channels">
+            <div class="export-cell-label">채널</div>
+            <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+          </div>
+        </div>
+        <div class="export-cell ec-segments" id="exp-segments">
+          <div class="export-cell-label">고객 세그먼트</div>
+          <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+        </div>
+      </div>
+      <div class="export-row export-row-bottom">
+        <div class="export-cell ec-cost" id="exp-cost">
+          <div class="export-cell-label">비용 구조</div>
+          <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+        </div>
+        <div class="export-cell ec-revenue" id="exp-revenue">
+          <div class="export-cell-label">수익원</div>
+          <div class="export-cell-value"><span class="export-cell-empty">미입력</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-card fade-in">
+        <h2>이 캔버스를 들고<br>피드백 받아보세요</h2>
+        <p class="cta-desc">혼자 고민하지 마세요. 같은 고민을 하는 빌더들이 모여 있습니다.</p>
+        <div class="cta-channels">
+          <a href="https://GIGATH_URL" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            긱어스 커뮤니티 참여하기
+          </a>
+        </div>
+        <div class="channel-cards">
+          <a href="https://YOUTUBE_URL" target="_blank" rel="noopener noreferrer" class="channel-link">
+            <div class="ch-icon ch-icon-yt">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </div>
+            <div class="ch-text">
+              <span class="ch-label">유튜브</span>
+              <span class="ch-desc">영상으로 보기</span>
+            </div>
+          </a>
+          <a href="https://www.threads.net/@charlee_1203" target="_blank" rel="noopener noreferrer" class="channel-link">
+            <div class="ch-icon ch-icon-threads">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007C5.461 23.956.057 18.522 0 11.784c0-.04.001-.079.001-.118C.057 4.87 5.592-.012 12.374 0c3.137.005 6.109 1.203 8.375 3.376a.75.75 0 01-1.035 1.084C17.76 2.585 15.14 1.505 12.37 1.5 6.408 1.489 1.557 6.29 1.501 11.67v.114c.052 6.078 5.018 11.01 11.076 11.214V15.3c0-1.876-.644-2.94-1.834-3.476a3.192 3.192 0 00-.456-.17c.028.396.042.8.042 1.209 0 .414-.062.753-.062.753a.75.75 0 01-1.49-.168s.052-.272.052-.585c0-.517-.027-1.016-.08-1.478a5.067 5.067 0 00-1.6-.26c-2.823 0-4.652 1.977-4.652 5.034 0 3.03 1.74 5.093 4.358 5.217a.75.75 0 01-.072 1.498c-3.481-.165-5.786-2.836-5.786-6.715 0-3.652 2.273-6.534 6.152-6.534.6 0 1.17.068 1.706.196.52-1.065 1.471-1.83 2.82-2.132.06-.013.12-.025.181-.035a6.924 6.924 0 00-.282-1.07.75.75 0 011.415-.5c.17.48.305.99.396 1.52a8.003 8.003 0 011.74.718c1.675.95 2.764 2.6 2.764 5.182v8.208a.75.75 0 01-.516.713A11.846 11.846 0 0112.186 24z"/></svg>
+            </div>
+            <div class="ch-text">
+              <span class="ch-label">Threads</span>
+              <span class="ch-desc">매일 인사이트</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">MakeGrowth</div>
+    <div class="footer-tagline">만드는 건 쉬워졌습니다. 그 다음을 탐구합니다.</div>
+    <div class="footer-copy">&copy; 2026 MakeGrowth. All rights reserved.</div>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var STORAGE_KEY = 'makegrowth-bmc-v1';
+
+      // ========================
+      // BMC Fields Definition
+      // ========================
+      var FIELDS = ['partners', 'activities', 'value', 'relations', 'segments', 'resources', 'channels', 'cost', 'revenue'];
+
+      var FIELD_LABELS = {
+        partners: '핵심 파트너',
+        activities: '핵심 활동',
+        value: '가치 제안',
+        relations: '고객 관계',
+        segments: '고객 세그먼트',
+        resources: '핵심 자원',
+        channels: '채널',
+        cost: '비용 구조',
+        revenue: '수익원'
+      };
+
+      // ========================
+      // State
+      // ========================
+      var state = {};
+      FIELDS.forEach(function(f) { state[f] = ''; });
+
+      // ========================
+      // DOM Refs
+      // ========================
+      var $ = function(id) { return document.getElementById(id); };
+      var bmcGrid = $('bmcGrid');
+      var bmcWrapper = $('bmcWrapper');
+      var completionCounter = $('completionCounter');
+      var progressBar = $('progressBar');
+      var toastEl = $('toast');
+      var exportArea = $('bmcExportArea');
+      var exportDate = $('exportDate');
+      var toastTimer = null;
+
+      // Set date
+      var now = new Date();
+      var dateStr = now.getFullYear() + '.' + String(now.getMonth() + 1).padStart(2, '0') + '.' + String(now.getDate()).padStart(2, '0');
+      exportDate.textContent = dateStr;
+
+      // ========================
+      // Textarea Auto-Resize
+      // ========================
+      function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+
+      // ========================
+      // State & Completion
+      // ========================
+      function getFilledCount() {
+        var count = 0;
+        FIELDS.forEach(function(f) {
+          if (state[f].trim() !== '') count++;
+        });
+        return count;
+      }
+
+      function updateCompletion() {
+        var filled = getFilledCount();
+        completionCounter.textContent = filled + '/9';
+
+        if (filled === 9) {
+          completionCounter.classList.add('complete');
+          bmcWrapper.classList.add('glow');
+        } else {
+          completionCounter.classList.remove('complete');
+          bmcWrapper.classList.remove('glow');
+        }
+
+        // Update filled state for each cell
+        var cells = bmcGrid.querySelectorAll('.bmc-cell');
+        cells.forEach(function(cell) {
+          var field = cell.getAttribute('data-field');
+          if (state[field] && state[field].trim() !== '') {
+            if (!cell.classList.contains('filled')) {
+              cell.classList.add('filled', 'just-filled');
+              setTimeout(function() { cell.classList.remove('just-filled'); }, 600);
+            }
+          } else {
+            cell.classList.remove('filled', 'just-filled');
+          }
+        });
+
+        // Update export area
+        syncExportArea();
+      }
+
+      // ========================
+      // Export Area Sync
+      // ========================
+      function syncExportArea() {
+        FIELDS.forEach(function(f) {
+          var el = $('exp-' + f);
+          if (!el) return;
+          var valEl = el.querySelector('.export-cell-value');
+          if (state[f] && state[f].trim() !== '') {
+            valEl.innerHTML = '';
+            valEl.textContent = state[f];
+          } else {
+            valEl.innerHTML = '<span class="export-cell-empty">미입력</span>';
+          }
+        });
+      }
+
+      // ========================
+      // LocalStorage
+      // ========================
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      function loadState() {
+        try {
+          var saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            var parsed = JSON.parse(saved);
+            FIELDS.forEach(function(f) {
+              if (parsed[f] !== undefined) state[f] = parsed[f];
+            });
+          }
+        } catch (e) {}
+      }
+
+      function restoreTextareas() {
+        var cells = bmcGrid.querySelectorAll('.bmc-cell');
+        cells.forEach(function(cell) {
+          var field = cell.getAttribute('data-field');
+          var textarea = cell.querySelector('textarea');
+          if (textarea && state[field]) {
+            textarea.value = state[field];
+            autoResize(textarea);
+          }
+        });
+      }
+
+      // ========================
+      // Input Handling
+      // ========================
+      bmcGrid.addEventListener('input', function(e) {
+        if (e.target.tagName !== 'TEXTAREA') return;
+        var cell = e.target.closest('.bmc-cell');
+        if (!cell) return;
+        var field = cell.getAttribute('data-field');
+        state[field] = e.target.value;
+        autoResize(e.target);
+        updateCompletion();
+        saveState();
+      });
+
+      // ========================
+      // Tooltip Handling
+      // ========================
+      var activeTooltip = null;
+
+      function showTooltip(tipId) {
+        hideAllTooltips();
+        var tip = $(tipId);
+        if (tip) {
+          tip.classList.add('show');
+          activeTooltip = tip;
+        }
+      }
+
+      function hideAllTooltips() {
+        if (activeTooltip) {
+          activeTooltip.classList.remove('show');
+          activeTooltip = null;
+        }
+      }
+
+      // Desktop: hover
+      bmcGrid.addEventListener('mouseenter', function(e) {
+        if (e.target.classList && e.target.classList.contains('bmc-tip-btn')) {
+          var tipId = 'tip-' + e.target.getAttribute('data-tip');
+          showTooltip(tipId);
+        }
+      }, true);
+
+      bmcGrid.addEventListener('mouseleave', function(e) {
+        if (e.target.classList && e.target.classList.contains('bmc-tip-btn')) {
+          hideAllTooltips();
+        }
+      }, true);
+
+      // Mobile: tap toggle
+      bmcGrid.addEventListener('click', function(e) {
+        var btn = e.target.closest('.bmc-tip-btn');
+        if (!btn) {
+          hideAllTooltips();
+          return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        var tipId = 'tip-' + btn.getAttribute('data-tip');
+        var tip = $(tipId);
+        if (tip && tip.classList.contains('show')) {
+          hideAllTooltips();
+        } else {
+          showTooltip(tipId);
+        }
+      });
+
+      // Close tooltip on outside click
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.bmc-tip-btn') && !e.target.closest('.bmc-tooltip')) {
+          hideAllTooltips();
+        }
+      });
+
+      // ========================
+      // Toast
+      // ========================
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function() {
+          toastEl.classList.remove('visible');
+        }, 2500);
+      }
+
+      // ========================
+      // Image Export
+      // ========================
+      $('btnSaveImage').addEventListener('click', function() {
+        if (typeof html2canvas === 'undefined') {
+          showToast('이미지 라이브러리 로딩 중... 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        // Temporarily move export area into view for capture
+        exportArea.style.position = 'fixed';
+        exportArea.style.left = '0';
+        exportArea.style.top = '0';
+        exportArea.style.zIndex = '-1';
+        exportArea.style.opacity = '1';
+
+        syncExportArea();
+
+        html2canvas(exportArea, {
+          backgroundColor: '#0f0f13',
+          scale: 2,
+          useCORS: true,
+          width: 1100,
+          windowWidth: 1100
+        }).then(function(canvas) {
+          var link = document.createElement('a');
+          link.download = 'makegrowth-bmc.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          showToast('이미지가 저장되었습니다!');
+        }).catch(function() {
+          showToast('이미지 저장에 실패했습니다. 다시 시도해주세요.');
+        }).finally(function() {
+          // Hide export area again
+          exportArea.style.position = 'absolute';
+          exportArea.style.left = '-9999px';
+          exportArea.style.top = '-9999px';
+          exportArea.style.zIndex = '-1';
+        });
+      });
+
+      // ========================
+      // Text Copy
+      // ========================
+      $('btnCopyText').addEventListener('click', function() {
+        var lines = [];
+        lines.push('=== 나의 비즈니스 모델 캔버스 (MakeGrowth) ===');
+        lines.push('');
+        FIELDS.forEach(function(f) {
+          var label = FIELD_LABELS[f];
+          var val = state[f] && state[f].trim() !== '' ? state[f].trim() : '(미입력)';
+          lines.push(label + ': ' + val);
+        });
+        lines.push('');
+        lines.push('작성일: ' + dateStr);
+
+        var text = lines.join('\n');
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function() {
+            showToast('텍스트가 복사되었습니다!');
+          }).catch(function() {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast('텍스트가 복사되었습니다!');
+        } catch (e) {
+          showToast('복사에 실패했습니다. 직접 텍스트를 선택해주세요.');
+        }
+        document.body.removeChild(ta);
+      }
+
+      // ========================
+      // Reset
+      // ========================
+      $('btnReset').addEventListener('click', function() {
+        if (!confirm('모든 내용을 초기화하시겠습니까?\n입력한 내용이 모두 삭제됩니다.')) return;
+
+        FIELDS.forEach(function(f) { state[f] = ''; });
+
+        var textareas = bmcGrid.querySelectorAll('textarea');
+        textareas.forEach(function(ta) {
+          ta.value = '';
+          autoResize(ta);
+        });
+
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+
+        updateCompletion();
+        showToast('초기화되었습니다.');
+      });
+
+      // ========================
+      // Scroll Progress Bar
+      // ========================
+      function updateProgress() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = pct + '%';
+      }
+
+      // ========================
+      // Completion Counter Visibility
+      // ========================
+      var heroEl = document.querySelector('.hero');
+
+      function updateCounterVisibility() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var heroBottom = heroEl.offsetTop + heroEl.offsetHeight;
+
+        if (scrollTop < heroBottom - 200) {
+          completionCounter.classList.remove('visible');
+        } else {
+          completionCounter.classList.add('visible');
+        }
+      }
+
+      // Throttled scroll handler
+      var ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            updateProgress();
+            updateCounterVisibility();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // ========================
+      // Fade-in with IntersectionObserver
+      // ========================
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!prefersReduced && 'IntersectionObserver' in window) {
+        var fadeEls = document.querySelectorAll('.fade-in');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        fadeEls.forEach(function(el) { observer.observe(el); });
+      } else {
+        document.querySelectorAll('.fade-in').forEach(function(el) {
+          el.classList.add('visible');
+        });
+      }
+
+      // ========================
+      // Init
+      // ========================
+      loadState();
+      restoreTextareas();
+      updateCompletion();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
