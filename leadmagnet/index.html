@@ -1563,15 +1563,16 @@
       // ========================
       $('btnCopyText').addEventListener('click', function() {
         var lines = [];
-        lines.push('=== 나의 비즈니스 모델 캔버스 (MakeGrowth) ===');
+        lines.push('# 나의 비즈니스 모델 캔버스');
         lines.push('');
         FIELDS.forEach(function(f) {
           var label = FIELD_LABELS[f];
           var val = state[f] && state[f].trim() !== '' ? state[f].trim() : '(미입력)';
-          lines.push(label + ': ' + val);
+          lines.push('**' + label + '**: ' + val);
         });
         lines.push('');
-        lines.push('작성일: ' + dateStr);
+        lines.push('---');
+        lines.push('*MakeGrowth · ' + dateStr + '*');
 
         var text = lines.join('\n');
 
